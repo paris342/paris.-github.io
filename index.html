@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поймай квадрат</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      margin: 20px;
+      color: #f39c12;
+    }
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 100px);
+      background: #2c3e50;
+      overflow: hidden;
+    }
+    #square {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: #e74c3c;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    #info {
+      margin: 10px;
+      font-size: 18px;
+    }
+    #startBtn {
+      padding: 10px 20px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    #startBtn:hover {
+      background: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Поймай квадрат!</h1>
+  <div id="info">
+    Очки: <span id="score">0</span> | Время: <span id="time">30</span> сек
+  </div>
+  <button id="startBtn" onclick="startGame()">Начать игру</button>
+  <div id="gameArea"></div>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const square = document.createElement("div");
+    square.id = "square";
+
+    let score = 0;
+    let time = 30;
+    let timer;
+    let gameActive = false;
+
+    function randomPosition() {
+      const maxX = gameArea.clientWidth - 50;
+      const maxY = gameArea.clientHeight - 50;
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
+      square.style.left = x + "px";
+      square.style.top = y + "px";
+    }
+
+    function startGame() {
+      score = 0;
+      time = 30;
+      scoreEl.textContent = score;
+      timeEl.textContent = time;
+      gameActive = true;
+      document.getElementById("startBtn").style.display = "none";
+
+      gameArea.appendChild(square);
+      randomPosition();
+
+      square.onclick = () => {
+        if (gameActive) {
+          score++;
+          scoreEl.textContent = score;
+          randomPosition();
+        }
+      };
+
+      timer = setInterval(() => {
+        time--;
+        timeEl.textContent = time;
+        if (time <= 0) endGame();
+      }, 1000);
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      gameActive = false;
+      square.remove();
+      document.getElementById("startBtn").style.display = "inline-block";
+      alert("⏰ Время вышло! Ты набрал " + score + " очков!");
+    }
+  </script>
+</body>
+</html>
